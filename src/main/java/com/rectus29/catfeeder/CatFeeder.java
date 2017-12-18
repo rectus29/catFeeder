@@ -1,6 +1,8 @@
-package com.rectus29.catfeeder;
+package main.java.com.rectus29.catfeeder;
 
 import com.pi4j.io.gpio.*;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -12,6 +14,7 @@ public class CatFeeder{
 
 	public static int MOTORRUNNINGMILLIS = 2000;
 
+	private static final Logger logger = LogManager.getLogger(CatFeeder.class);
 	
 	public static void main(String[] args) {
 		
