@@ -1,24 +1,17 @@
 package com.rectus29.catfeeder;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.rectus29.catfeeder.enums.ApplicationState;
 import com.rectus29.catfeeder.scheduler.CatFeederScheduler;
 import com.rectus29.catfeeder.task.CatFeedTask;
 import com.rectus29.catfeeder.task.CatScheduledFeederTask;
-import com.rectus29.catfeeder.task.DummyTask;
+import com.rectus29.catfeeder.utils.Mp3Player;
 import com.rectus29.catfeeder.utils.SchedulingPattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
-import org.reflections.Reflections;
-import sun.reflect.Reflection;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.Timer;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /*-----------------------------------------------------*/
 /*      _____           _               ___   ___      */
@@ -67,5 +60,32 @@ public class CatFeederApplication {
 		}else{
 			logger.info("Aplication already Start - ignoring command");
 		}
+	}
+
+	public CatFeederScheduler getCatFeederScheduler() {
+		return catFeederScheduler;
+	}
+
+	public CatFeederApplication scheduleThis(String json){
+		new Mp3Player().play("plop.mp3");
+		return this;
+	}
+
+
+	/**
+	 * Return the current Server state as JSON
+	 * @return jsonObject
+	 */
+	public JsonObject printState(){
+		JsonObject out = new JsonObject();
+		out.addProperty("ServerState", this.applicationState.toString());
+		out.addProperty("date" , new DateTime().getMillis());
+		JsonArray taskArray = new JsonArray();
+		Gson gson = new Gson()
+		for(CatScheduledFeederTask temp : this.getCatFeederScheduler().getFeederTaskList()){
+			taskArray.add(gson.toJson(temp));
+		}
+		out.add("schedule", taskArray);
+		return out;
 	}
 }

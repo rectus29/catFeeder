@@ -1,6 +1,12 @@
 package com.rectus29.catfeeder.filters;
 
+import com.rectus29.catfeeder.CatFeederApplication;
+
 import javax.servlet.*;
+import javax.servlet.annotation.HttpMethodConstraint;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /*-----------------------------------------------------*/
@@ -11,7 +17,7 @@ import java.io.IOException;
 /*     | | \ \  __/ (__| |_| |_| \__ \  / /_   / /     */
 /*     |_|  \_\___|\___|\__|\__,_|___/ |____| /_/      */
 /*                                                     */
-/*                Date: 04/10/2018 10:30                */
+/*                Date: 04/10/2018 10:30               */
 /*                 All right reserved                  */
 /*-----------------------------------------------------*/
 
@@ -21,6 +27,17 @@ public class CatFeederFilter implements Filter {
 	}
 
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
+		CatFeederApplication cfa = CatFeederApplication.getInstance();
+		HttpServletRequest httpReq = ((HttpServletRequest) req);
+		HttpServletResponse httpResp = ((HttpServletResponse) resp);
+		if("GET".equals(httpReq.getMethod())){
+			//if get set json into response
+			httpReq.setAttribute("jsonData", cfa.printState().toString());
+		}else if("POST".equals(((HttpServletRequest) req).getMethod())){
+			//if post save the data and set json into response
+			cfa.scheduleThis("");
+		}
+		//let go the request
 		chain.doFilter(req, resp);
 	}
 

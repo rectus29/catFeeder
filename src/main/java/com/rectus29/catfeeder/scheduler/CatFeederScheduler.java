@@ -32,15 +32,14 @@ public class CatFeederScheduler {
 	}
 
 	public void schedule(CatScheduledFeederTask catFeedTask){
-		this.scheduler.scheduleAtFixedRate(new DummyTask(), 0, 1, TimeUnit.MINUTES);
+		//this.scheduler.scheduleAtFixedRate(new DummyTask(), 0, 1, TimeUnit.MINUTES);
 	}
 
 	public void unSchedule(CatScheduledFeederTask catFeedTask){
 
 	}
 
-	public List getSchedulList(){
-		List out = new ArrayList();
-		return out;
+	public List<CatScheduledFeederTask> getFeederTaskList() {
+		return feederTaskList;
 	}
 }

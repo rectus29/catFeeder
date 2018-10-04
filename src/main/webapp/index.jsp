@@ -3,10 +3,7 @@
 <head>
 	<title>CatFeeder</title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js"></script>
-	<script
-			src="https://code.jquery.com/jquery-2.2.4.min.js"
-			integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-			crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
@@ -29,16 +26,16 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 </head>
 <body>
+<br>
 <div class="container">
-	<form id="frequencyEditor">
-		<input type="hidden" id="schedulingString" value="1,20:00,23:00|4,9:00,12:00">
+	<form id="frequencyEditor" method="post" target="#">
 		<h3 class="bold center">
-			<i class="fa fa-calendar"></i>&nbsp;Programmation
+			<i class="far fa-calendar-alt"></i>&nbsp;Programmation
 		</h3>
 		<hr/>
 		<div class="container">
 			<div class="form-group row">
-				<select name="daySelector" id="daySelector" placeholder="Jour" class="form-control">
+				<select name="daySelector" id="daySelector" class="form-control">
 					<optgroup label="">
 						<option value="0">
 							Tous les jours
@@ -80,31 +77,16 @@
 			</div>
 		</div>
 		<div class="text-right">
-			<button id="submit" type="button" class="btn btn-primary">
+			<button name="submit" type="submit" class="btn btn-primary">
 				Sauvegarder
 			</button>
-			<button id="cancel" type="button" class="btn btn-outline-secondary">
+			<button name="cancel" type="button" class="btn btn-outline-secondary" onclick="location.reload();">
 				Annuler
 			</button>
 		</div>
 		<script>
-			var scheduleObjectList = [
-				{
-					"uid": "78945123",
-					"day": 0,
-					"hour": "08:00"
-				},
-				{
-					"uid": "456789123",
-					"day": 0,
-					"hour": "18:00"
-				},
-				{
-					"uid": "123456789",
-					"day": 1,
-					"hour": "17:45"
-				}
-			];
+			var jsonObject = <%= request.getAttribute("jsonData")%>;
+			var scheduledObject = [];
 
 			$(function () {
 				moment.locale('fr');
@@ -120,7 +102,7 @@
 			}
 
 			function printScheduleObject(scheduledObject) {
-				var dayLabel = (scheduledObject.day == 0) ? 'Tous les jours' : moment().isoWeekday(scheduledObject.day).format('dddd');
+				var dayLabel = (scheduledObject.day == 0) ? 'Tous les jours' : moment().isoWeekday(parseInt(scheduledObject.day)).format('dddd');
 				$('#scheduleList').append('<li class="list-group-item"><span class="dayLabel">' + dayLabel + '</span>&nbsp;-&nbsp;<small class="text-muted">' + scheduledObject.hour + '</small><a href="#" class="scheduleRemove" data-uid="' + scheduledObject.uid + '"><i class="far fa-times-circle float-right"></i></a></li>');
 			}
 
