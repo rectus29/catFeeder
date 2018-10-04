@@ -54,18 +54,11 @@ public class CatFeederApplication {
 			this.catFeederScheduler = new CatFeederScheduler();
 			//retreive task to schedule
 			//TODO for dev manual building
-//			CatScheduledFeederTask ctf = new CatScheduledFeederTask()
-//					.setRunnableTask(CatFeedTask.class)
-//					.setSchedulingPatterns(SchedulingPattern.buildFromPatternString("*,08:30,00:00|*,18:30,00:00"));
+			CatScheduledFeederTask cstf = new CatScheduledFeederTask()
+					.setRunnableTask(CatFeedTask.class)
+					.setSchedulingPatterns(SchedulingPattern.buildFromPatternString("*,08:30,00:00|*,18:30,00:00"));
 
-			scheduler.scheduleAtFixedRate(new DummyTask(), 0, 1, TimeUnit.MINUTES);
-
-//			scheduler.scheduleWithFixedDelay();
-//			scheduler.
-//
-//
-//			Timer time = new Timer();
-//			time.schedule(ctf.getRunnableTask(),new DateTime().withHourOfDay(8).withMinuteOfHour(30).getMillis(),TimeUnit.HOURS.toMillis(24));
+			catFeederScheduler.schedule(cstf);
 
 			//send notif
 

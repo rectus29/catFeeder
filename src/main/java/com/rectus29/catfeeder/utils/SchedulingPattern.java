@@ -60,7 +60,8 @@ public class SchedulingPattern {
 				String dailyStartTime = dailyPattern.split(",")[1];
 				String dailyEndTime = dailyPattern.split(",")[2];
 				//build a frequency pattern
-				fp.setDayNumber(Integer.parseInt(dayNumber));
+				//if daynumber set to * put 0 to mark everyDay
+				fp.setDayNumber(("*".equals(dayNumber))? 0 : Integer.parseInt(dayNumber));
 				fp.setStartTime(new LocalTime(
 						Integer.parseInt(dailyStartTime.split(":")[0]),
 						Integer.parseInt(dailyStartTime.split(":")[1]))

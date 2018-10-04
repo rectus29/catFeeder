@@ -1,9 +1,6 @@
-package com.rectus29.catfeeder.servlet;
+package com.rectus29.catfeeder.filters;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.*;
 import java.io.IOException;
 
 /*-----------------------------------------------------*/
@@ -14,18 +11,21 @@ import java.io.IOException;
 /*     | | \ \  __/ (__| |_| |_| \__ \  / /_   / /     */
 /*     |_|  \_\___|\___|\__|\__,_|___/ |____| /_/      */
 /*                                                     */
-/*                Date: 03/10/2018 11:10               */
+/*                Date: 04/10/2018 10:30                */
 /*                 All right reserved                  */
 /*-----------------------------------------------------*/
 
+public class CatFeederFilter implements Filter {
 
-public class CatFeederServlet extends HttpServlet {
+	public void destroy() {
+	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
+		chain.doFilter(req, resp);
+	}
+
+	public void init(FilterConfig config) throws ServletException {
 
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-	}
 }

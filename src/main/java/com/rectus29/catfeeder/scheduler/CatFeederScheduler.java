@@ -12,13 +12,14 @@ package com.rectus29.catfeeder.scheduler;
 /*                 All right reserved                  */
 /*-----------------------------------------------------*/
 
-import com.rectus29.catfeeder.task.CatFeedTask;
 import com.rectus29.catfeeder.task.CatScheduledFeederTask;
+import com.rectus29.catfeeder.task.DummyTask;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class CatFeederScheduler {
 
@@ -30,11 +31,11 @@ public class CatFeederScheduler {
 		this.scheduler = Executors.newScheduledThreadPool(4);
 	}
 
-	public void schedule(CatFeedTask catFeedTask){
-
+	public void schedule(CatScheduledFeederTask catFeedTask){
+		this.scheduler.scheduleAtFixedRate(new DummyTask(), 0, 1, TimeUnit.MINUTES);
 	}
 
-	public void unSchedule(CatFeedTask catFeedTask){
+	public void unSchedule(CatScheduledFeederTask catFeedTask){
 
 	}
 
