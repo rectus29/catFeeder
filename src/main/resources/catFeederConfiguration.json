@@ -1,5 +1,5 @@
 {
-  "name": "catFeeder",
+  "name": "catFeederConfiguration",
   "buildNumber": "%buildNumber%",
   "version": "%version%",
   "openingTime": 2000,

@@ -20,6 +20,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Class keep data of a week frequency from a pattern String
@@ -34,7 +35,7 @@ import java.util.List;
 public class SchedulingPattern {
 
 	private static Logger logger = LogManager.getLogger(SchedulingPattern.class);
-
+	private String uid = UUID.randomUUID().toString();
 	private int dayNumber;
 	private LocalTime startTime;
 	private LocalTime endTime;
@@ -101,6 +102,15 @@ public class SchedulingPattern {
 
 	public void setEndTime(LocalTime endTime) {
 		this.endTime = endTime;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public SchedulingPattern setUid(String uid) {
+		this.uid = uid;
+		return this;
 	}
 
 	@Override

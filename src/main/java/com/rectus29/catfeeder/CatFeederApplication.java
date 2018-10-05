@@ -1,9 +1,6 @@
 package com.rectus29.catfeeder;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.rectus29.catfeeder.enums.ApplicationState;
 import com.rectus29.catfeeder.scheduler.CatFeederScheduler;
 import com.rectus29.catfeeder.serializer.CatFeederConfigurationSerializer;
@@ -39,6 +36,9 @@ public class CatFeederApplication {
 	private CatFeederScheduler catFeederScheduler;
 	private CatFeederConfiguration catFeederConfiguration;
 	private String configFilePath = "catFeederConfiguration.json";
+	private GsonBuilder gsonBuilder =  new GsonBuilder()
+			.registerTypeAdapter(CatFeederConfiguration.class, new CatFeederConfigurationSerializer())
+			.registerTypeAdapter(SchedulingPattern.class, new SchedulingPatternSerializer());
 
 	private CatFeederApplication() {
 	}
@@ -59,12 +59,9 @@ public class CatFeederApplication {
 			//TODO for dev manual building
 			CatScheduledFeederTask cstf = new CatScheduledFeederTask()
 					.setRunnableTask(CatFeedTask.class)
-					.setSchedulingPatterns(SchedulingPattern.buildFromPatternString("*,08:30,00:00|*,18:30,00:00"));
-
+					.setSchedulingPatterns(this.catFeederConfiguration.getScheduledTask());
 			catFeederScheduler.schedule(cstf);
-
-			//send notif
-
+			//end of the config
 			this.applicationState = ApplicationState.RUNNING;
 			logger.info("CatFeederApplication Started");
 		} else {
@@ -76,24 +73,15 @@ public class CatFeederApplication {
 		try {
 			File configFile = new File(getClass().getClassLoader().getResource(configFilePath).getFile());
 			String configRaw = FileUtils.readFileToString(configFile);
-
-			GsonBuilder gsonBuilder = new GsonBuilder()
-					.registerTypeAdapter(CatFeederConfiguration.class, new CatFeederConfigurationSerializer())
-					.registerTypeAdapter(SchedulingPattern.class, new SchedulingPatternSerializer());
-			this.catFeederConfiguration = gsonBuilder.create().fromJson(configRaw, CatFeederConfiguration.class);
-
+			return gsonBuilder.create().fromJson(configRaw, CatFeederConfiguration.class);
 		} catch (Exception e) {
 			logger.error("Error while loading config file set default config", e);
 		}
+		return new CatFeederConfiguration();
 	}
 
 	public CatFeederScheduler getCatFeederScheduler() {
 		return catFeederScheduler;
-	}
-
-	public CatFeederApplication scheduleThis(String json) {
-		new Mp3Player().play("plop.mp3");
-		return this;
 	}
 
 
@@ -103,15 +91,14 @@ public class CatFeederApplication {
 	 * @return jsonObject
 	 */
 	public JsonObject printState() {
-		JsonObject out = new JsonObject();
+		JsonObject out = this.gsonBuilder.create().toJsonTree(this.catFeederConfiguration).getAsJsonObject();
 		out.addProperty("ServerState", this.applicationState.toString());
 		out.addProperty("date", new DateTime().getMillis());
-		JsonArray taskArray = new JsonArray();
-		Gson gson = new Gson();
-		for (CatScheduledFeederTask temp : this.getCatFeederScheduler().getFeederTaskList()) {
-			taskArray.add(gson.toJson(temp));
-		}
-		out.add("schedule", taskArray);
 		return out;
+	}
+
+	public void applyNewConfiguration(JsonElement jsonConfig) throws Exception{
+		CatFeederConfiguration newConf = this.gsonBuilder.create().fromJson(jsonConfig, CatFeederConfiguration.class)
+
 	}
 }

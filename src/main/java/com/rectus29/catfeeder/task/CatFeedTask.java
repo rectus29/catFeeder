@@ -1,6 +1,7 @@
 package com.rectus29.catfeeder.task;
 
 import com.pi4j.io.gpio.*;
+import com.rectus29.catfeeder.utils.Mp3Player;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -42,6 +43,8 @@ public class CatFeedTask extends TimerTask {
 					"motorRelayCommand",
 					PinState.LOW
 			);
+
+			new Mp3Player().play("plop.mp3");
 			logger.info("distribution inprogress");
 			motorRelayCommand.setState(PinState.HIGH);
 			this.wait(MOTORRUNNINGMILLIS);

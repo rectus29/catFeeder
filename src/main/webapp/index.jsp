@@ -28,7 +28,8 @@
 <body>
 <br>
 <div class="container">
-	<form id="frequencyEditor" method="post" target="#">
+	<form id="frequencyEditor" method="post">
+		<input type="hidden" value="" name="jsonData" id="jsonHidden">
 		<h3 class="bold center">
 			<i class="far fa-calendar-alt"></i>&nbsp;Programmation
 		</h3>
@@ -77,16 +78,16 @@
 			</div>
 		</div>
 		<div class="text-right">
-			<button name="submit" type="submit" class="btn btn-primary">
+			<button id="submit" type="submit" class="btn btn-primary">
 				Sauvegarder
 			</button>
-			<button name="cancel" type="button" class="btn btn-outline-secondary" onclick="location.reload();">
+			<button type="button" class="btn btn-outline-secondary" onclick="location.reload();">
 				Annuler
 			</button>
 		</div>
 		<script>
-			var jsonObject = <%= request.getAttribute("jsonData")%>;
-			var scheduledObject = [];
+			var jsonObject = JSON.parse('<%= request.getAttribute("jsonData")%>');
+			var scheduleObjectList = jsonObject.scheduledTask;
 
 			$(function () {
 				moment.locale('fr');
@@ -98,7 +99,8 @@
 				scheduleObjectList.forEach(function (element) {
 					printScheduleObject(element);
 				});
-
+				//refresh the hidden
+				$('#jsonHidden').val(JSON.stringify(jsonObject));
 			}
 
 			function printScheduleObject(scheduledObject) {

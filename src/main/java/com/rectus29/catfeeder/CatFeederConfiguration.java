@@ -12,28 +12,16 @@ package com.rectus29.catfeeder;
 /*                 All right reserved                  */
 /*-----------------------------------------------------*/
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.rectus29.catfeeder.scheduler.CatFeederScheduler;
-import com.rectus29.catfeeder.serializer.CatFeederConfigurationSerializer;
-import com.rectus29.catfeeder.serializer.SchedulingPatternSerializer;
-import com.rectus29.catfeeder.task.CatScheduledFeederTask;
 import com.rectus29.catfeeder.utils.SchedulingPattern;
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CatFeederConfiguration {
-	private static Logger logger = LogManager.getLogger(CatFeederScheduler.class);
-	private String version;
-	private String buildNumber;
-	private int openingTime;
+	private String version = "Default-Version";
+	private String buildNumber = "0000";
+	private long openingTime = new Date().getTime();
 	private List<SchedulingPattern> scheduledTask = new ArrayList<>();
 
 	public CatFeederConfiguration() {
@@ -57,7 +45,7 @@ public class CatFeederConfiguration {
 		return this;
 	}
 
-	public int getOpeningTime() {
+	public long getOpeningTime() {
 		return openingTime;
 	}
 
