@@ -7,13 +7,21 @@
 	<!-- The Basics -->
 	<groupId>com.rectus29.app</groupId>
 	<artifactId>catfeeder</artifactId>
-	<version>1.0</version>
+	<version>1.0.0-BETA</version>
 	<packaging>war</packaging>
 	<name>catFeeder</name>
 	<description>an automatic cat feeder</description>
 	<url>github</url>
 	<inceptionYear>2017</inceptionYear>
 
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+		<mavenBuildTimestamp>${maven.build.timestamp}</mavenBuildTimestamp>
+	</properties>
 
 	<build>
 		<sourceDirectory>${basedir}/src/main/java</sourceDirectory>
@@ -24,11 +32,48 @@
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<version>1.5.2</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<file>${project.build.directory}/${project.build.finalName}/WEB-INF/classes/catFeederConfiguration.json</file>
+					<replacements>
+						<replacement>
+							<token>%version%</token>
+							<value>${version}</value>
+						</replacement>
+						<replacement>
+							<token>%buildNumber%</token>
+							<value>${mavenBuildTimestamp}</value>
+						</replacement>
+
+						<!--<entry key="product.build.major" type="int" value="${parsedVersion.majorVersion}"/>-->
+						<!--<entry key="product.build.minor" type="int" value="${parsedVersion.minorVersion}"/>-->
+						<!--<entry key="product.build.patch" type="int" value="${parsedVersion.incrementalVersion}"/>-->
+						<!--<entry key="buildnumber" type="date" value="now" pattern="YYYYMMddHHmm"/>-->
+
+					</replacements>
+				</configuration>
+			</plugin>
 
 		</plugins>
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.0.1</version>
+		</dependency>
 		<dependency>
 			<groupId>com.pi4j</groupId>
 			<artifactId>pi4j-example</artifactId>
@@ -84,13 +129,6 @@
 		</dependency>
 
 	</dependencies>
-
-	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	</properties>
 
 	<developers>
 		<developer>

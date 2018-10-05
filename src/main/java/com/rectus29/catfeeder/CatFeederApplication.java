@@ -1,17 +1,23 @@
 package com.rectus29.catfeeder;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.rectus29.catfeeder.enums.ApplicationState;
 import com.rectus29.catfeeder.scheduler.CatFeederScheduler;
+import com.rectus29.catfeeder.serializer.CatFeederConfigurationSerializer;
+import com.rectus29.catfeeder.serializer.SchedulingPatternSerializer;
 import com.rectus29.catfeeder.task.CatFeedTask;
 import com.rectus29.catfeeder.task.CatScheduledFeederTask;
 import com.rectus29.catfeeder.utils.Mp3Player;
 import com.rectus29.catfeeder.utils.SchedulingPattern;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
+
+import java.io.File;
 
 /*-----------------------------------------------------*/
 /*      _____           _               ___   ___      */
@@ -27,22 +33,26 @@ import org.joda.time.DateTime;
 
 public class CatFeederApplication {
 
-	private static final Logger logger= LogManager.getLogger(CatFeederApplication.class);
+	private static final Logger logger = LogManager.getLogger(CatFeederApplication.class);
 	private static CatFeederApplication ourInstance = new CatFeederApplication();
 	private ApplicationState applicationState = ApplicationState.NOTSTARTED;
 	private CatFeederScheduler catFeederScheduler;
+	private CatFeederConfiguration catFeederConfiguration;
+	private String configFilePath = "catFeederConfiguration.json";
+
+	private CatFeederApplication() {
+	}
 
 	public static CatFeederApplication getInstance() {
 		return ourInstance;
 	}
 
-	private CatFeederApplication() {
-	}
-
 	public void initApplication() {
-		if(!this.applicationState.equals(ApplicationState.RUNNING)) {
+		if (!this.applicationState.equals(ApplicationState.RUNNING)) {
 			logger.info("Init CatFeederApplication");
 			this.applicationState = ApplicationState.STARTING;
+			//loading configuration File
+			this.catFeederConfiguration = initConfig(this.configFilePath);
 			//init scheduler
 			this.catFeederScheduler = new CatFeederScheduler();
 			//retreive task to schedule
@@ -57,8 +67,23 @@ public class CatFeederApplication {
 
 			this.applicationState = ApplicationState.RUNNING;
 			logger.info("CatFeederApplication Started");
-		}else{
+		} else {
 			logger.info("Aplication already Start - ignoring command");
+		}
+	}
+
+	private CatFeederConfiguration initConfig(String configFilePath) {
+		try {
+			File configFile = new File(getClass().getClassLoader().getResource(configFilePath).getFile());
+			String configRaw = FileUtils.readFileToString(configFile);
+
+			GsonBuilder gsonBuilder = new GsonBuilder()
+					.registerTypeAdapter(CatFeederConfiguration.class, new CatFeederConfigurationSerializer())
+					.registerTypeAdapter(SchedulingPattern.class, new SchedulingPatternSerializer());
+			this.catFeederConfiguration = gsonBuilder.create().fromJson(configRaw, CatFeederConfiguration.class);
+
+		} catch (Exception e) {
+			logger.error("Error while loading config file set default config", e);
 		}
 	}
 
@@ -66,7 +91,7 @@ public class CatFeederApplication {
 		return catFeederScheduler;
 	}
 
-	public CatFeederApplication scheduleThis(String json){
+	public CatFeederApplication scheduleThis(String json) {
 		new Mp3Player().play("plop.mp3");
 		return this;
 	}
@@ -74,15 +99,16 @@ public class CatFeederApplication {
 
 	/**
 	 * Return the current Server state as JSON
+	 *
 	 * @return jsonObject
 	 */
-	public JsonObject printState(){
+	public JsonObject printState() {
 		JsonObject out = new JsonObject();
 		out.addProperty("ServerState", this.applicationState.toString());
-		out.addProperty("date" , new DateTime().getMillis());
+		out.addProperty("date", new DateTime().getMillis());
 		JsonArray taskArray = new JsonArray();
-		Gson gson = new Gson()
-		for(CatScheduledFeederTask temp : this.getCatFeederScheduler().getFeederTaskList()){
+		Gson gson = new Gson();
+		for (CatScheduledFeederTask temp : this.getCatFeederScheduler().getFeederTaskList()) {
 			taskArray.add(gson.toJson(temp));
 		}
 		out.add("schedule", taskArray);

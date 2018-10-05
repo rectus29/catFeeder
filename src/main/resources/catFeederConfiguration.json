@@ -1,0 +1,13 @@
+{
+  "name": "catFeeder",
+  "buildNumber": "%buildNumber%",
+  "version": "%version%",
+  "openingTime": 2000,
+  "scheduledTask": [
+	{
+	  "day": 0,
+	  "hour": "08:00",
+	  "uid": "yala"
+	}
+  ]
+}
