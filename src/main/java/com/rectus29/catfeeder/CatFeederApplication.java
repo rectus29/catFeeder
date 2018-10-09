@@ -7,6 +7,7 @@ import com.rectus29.catfeeder.serializer.CatFeederConfigurationSerializer;
 import com.rectus29.catfeeder.serializer.SchedulingPatternSerializer;
 import com.rectus29.catfeeder.task.CatFeedTask;
 import com.rectus29.catfeeder.task.CatScheduledFeederTask;
+import com.rectus29.catfeeder.task.DummyTask;
 import com.rectus29.catfeeder.utils.Mp3Player;
 import com.rectus29.catfeeder.utils.SchedulingPattern;
 import org.apache.commons.io.FileUtils;
@@ -58,7 +59,7 @@ public class CatFeederApplication {
 			//retreive task to schedule
 			//TODO for dev manual building
 			CatScheduledFeederTask cstf = new CatScheduledFeederTask()
-					.setRunnableTask(CatFeedTask.class)
+					.setRunnableTask(DummyTask.class)
 					.setSchedulingPatterns(this.catFeederConfiguration.getScheduledTask());
 			catFeederScheduler.schedule(cstf);
 			//end of the config
@@ -98,7 +99,17 @@ public class CatFeederApplication {
 	}
 
 	public void applyNewConfiguration(JsonElement jsonConfig) throws Exception{
-		CatFeederConfiguration newConf = this.gsonBuilder.create().fromJson(jsonConfig, CatFeederConfiguration.class)
+		CatFeederConfiguration newConf = this.gsonBuilder.create().fromJson(jsonConfig, CatFeederConfiguration.class);
+		//set the new Configuration
+		this.catFeederConfiguration = newConf;
+		//clear the scheduler and reset the new schedule
+		this.catFeederScheduler.unScheduleAll();
+		//retreive task to schedule
+		//TODO for dev manual building
+		CatScheduledFeederTask cstf = new CatScheduledFeederTask()
+				.setRunnableTask(DummyTask.class)
+				.setSchedulingPatterns(this.catFeederConfiguration.getScheduledTask());
+		catFeederScheduler.schedule(cstf);
 
 	}
 }

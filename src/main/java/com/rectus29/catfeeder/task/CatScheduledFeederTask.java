@@ -15,12 +15,11 @@ import com.rectus29.catfeeder.utils.SchedulingPattern;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimerTask;
 
 public class CatScheduledFeederTask {
 
 	private List<SchedulingPattern> schedulingPatterns = new ArrayList<>();
-	private Class<? extends TimerTask> runnableTask;
+	private Class<? extends Runnable> runnableTask;
 
 	public CatScheduledFeederTask() {
 	}
@@ -29,16 +28,16 @@ public class CatScheduledFeederTask {
 		return schedulingPatterns;
 	}
 
-	public Class<? extends Runnable> getRunnableTask() {
-		return runnableTask;
-	}
-
 	public CatScheduledFeederTask setSchedulingPatterns(List<SchedulingPattern> schedulingPatterns) {
 		this.schedulingPatterns = schedulingPatterns;
 		return this;
 	}
 
-	public CatScheduledFeederTask setRunnableTask(Class<? extends TimerTask> runnableTask) {
+	public Runnable getRunnableTask() throws IllegalAccessException, InstantiationException {
+		return runnableTask.newInstance();
+	}
+
+	public CatScheduledFeederTask setRunnableTask(Class<? extends Runnable> runnableTask) {
 		this.runnableTask = runnableTask;
 		return this;
 	}

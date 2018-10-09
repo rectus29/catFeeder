@@ -14,17 +14,21 @@ package com.rectus29.catfeeder.scheduler;
 
 import com.rectus29.catfeeder.task.CatScheduledFeederTask;
 import com.rectus29.catfeeder.task.DummyTask;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class CatFeederScheduler {
 
+	private Logger logger = Logger.getLogger(CatFeederScheduler.class);
 	private ScheduledExecutorService scheduler;
 	private List<CatScheduledFeederTask> feederTaskList = new ArrayList<>();
+	private List<ScheduledFuture> scheduledFutures = new ArrayList<>();
 
 
 	public CatFeederScheduler() {
@@ -32,7 +36,12 @@ public class CatFeederScheduler {
 	}
 
 	public void schedule(CatScheduledFeederTask catFeedTask){
-		//this.scheduler.scheduleAtFixedRate(new DummyTask(), 0, 1, TimeUnit.MINUTES);
+		try {
+			logger.debug("scheduled new task");
+			scheduledFutures.add(this.scheduler.scheduleAtFixedRate(catFeedTask.getRunnableTask(), 0, 1, TimeUnit.MINUTES));
+		} catch (IllegalAccessException | InstantiationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void unSchedule(CatScheduledFeederTask catFeedTask){
@@ -41,5 +50,10 @@ public class CatFeederScheduler {
 
 	public List<CatScheduledFeederTask> getFeederTaskList() {
 		return feederTaskList;
+	}
+
+	public void unScheduleAll() {
+		logger.debug("clear all scheduled task");
+		this.scheduler.shutdown();
 	}
 }

@@ -38,16 +38,13 @@ public class CatFeederFilter implements Filter {
 			//if get set json into response
 			httpReq.setAttribute("jsonData", cfa.printState().toString());
 		}else if("POST".equals(httpReq.getMethod())){
-
 			try {
 				//if post save the data and set json into response
 				JsonElement jsonElement = new JsonParser().parse(httpReq.getParameter("jsonData"));
 				CatFeederApplication.getInstance().applyNewConfiguration(jsonElement);
-
 			}catch(Exception ex){
 
 			}
-
 			httpReq.setAttribute("jsonData", cfa.printState().toString());
 		}
 		//let go the request
