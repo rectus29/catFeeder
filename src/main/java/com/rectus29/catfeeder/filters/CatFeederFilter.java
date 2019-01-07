@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.rectus29.catfeeder.CatFeederApplication;
 import com.rectus29.catfeeder.CatFeederConfiguration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.annotation.HttpMethodConstraint;
@@ -27,6 +29,8 @@ import java.io.IOException;
 
 public class CatFeederFilter implements Filter {
 
+	private static final Logger logger = LogManager.getLogger(CatFeederFilter.class);
+
 	public void destroy() {
 	}
 
@@ -42,8 +46,9 @@ public class CatFeederFilter implements Filter {
 				//if post save the data and set json into response
 				JsonElement jsonElement = new JsonParser().parse(httpReq.getParameter("jsonData"));
 				CatFeederApplication.getInstance().applyNewConfiguration(jsonElement);
+				CatFeederApplication.getInstance().saveConfiguration();
 			}catch(Exception ex){
-
+				logger.error("Error while applying new configuration", ex);
 			}
 			httpReq.setAttribute("jsonData", cfa.printState().toString());
 		}

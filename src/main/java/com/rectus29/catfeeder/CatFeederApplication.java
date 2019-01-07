@@ -103,13 +103,23 @@ public class CatFeederApplication {
 		//set the new Configuration
 		this.catFeederConfiguration = newConf;
 		//clear the scheduler and reset the new schedule
-		this.catFeederScheduler.unScheduleAll();
+//		this.catFeederScheduler.unScheduleAll();
 		//retreive task to schedule
 		//TODO for dev manual building
-		CatScheduledFeederTask cstf = new CatScheduledFeederTask()
-				.setRunnableTask(DummyTask.class)
-				.setSchedulingPatterns(this.catFeederConfiguration.getScheduledTask());
-		catFeederScheduler.schedule(cstf);
+//		CatScheduledFeederTask cstf = new CatScheduledFeederTask()
+//				.setRunnableTask(DummyTask.class)
+//				.setSchedulingPatterns(this.catFeederConfiguration.getScheduledTask());
+//		catFeederScheduler.schedule(cstf);
 
+	}
+
+	public CatFeederConfiguration saveConfiguration() {
+		try {
+			File configFile = new File(getClass().getClassLoader().getResource(configFilePath).getFile());
+			FileUtils.writeStringToFile(configFile, gsonBuilder.create().toJson(this.catFeederConfiguration, CatFeederConfiguration.class));
+		} catch (Exception e) {
+			logger.error("Error while writing config to file", e);
+		}
+		return this.catFeederConfiguration;
 	}
 }

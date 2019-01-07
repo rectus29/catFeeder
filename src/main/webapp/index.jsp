@@ -28,7 +28,7 @@
 <body>
 <br>
 <div class="container">
-	<form id="frequencyEditor" method="post">
+	<form id="frequencyEditor" action="index.jsp" method="post">
 		<input type="hidden" value="" name="jsonData" id="jsonHidden">
 		<h3 class="bold center">
 			<i class="far fa-calendar-alt"></i>&nbsp;Programmation
