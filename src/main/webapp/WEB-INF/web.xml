@@ -8,6 +8,7 @@
 		<filter-name>catfeederfilter</filter-name>
 		<filter-class>com.rectus29.catfeeder.filters.CatFeederFilter</filter-class>
 	</filter>
+
 	<filter-mapping>
 		<filter-name>catfeederfilter</filter-name>
 		<url-pattern>/*</url-pattern>

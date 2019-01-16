@@ -2,6 +2,7 @@ package com.rectus29.catfeeder;
 
 import com.google.gson.*;
 import com.rectus29.catfeeder.enums.ApplicationState;
+import com.rectus29.catfeeder.exception.CatFeederException;
 import com.rectus29.catfeeder.scheduler.CatFeederScheduler;
 import com.rectus29.catfeeder.serializer.CatFeederConfigurationSerializer;
 import com.rectus29.catfeeder.serializer.SchedulingPatternSerializer;
@@ -58,10 +59,10 @@ public class CatFeederApplication {
 			this.catFeederScheduler = new CatFeederScheduler();
 			//retreive task to schedule
 			//TODO for dev manual building
-			CatScheduledFeederTask cstf = new CatScheduledFeederTask()
-					.setRunnableTask(DummyTask.class)
-					.setSchedulingPatterns(this.catFeederConfiguration.getScheduledTask());
-			catFeederScheduler.schedule(cstf);
+//			CatScheduledFeederTask cstf = new CatScheduledFeederTask()
+//					.setRunnableTask(DummyTask.class)
+//					.setSchedulingPatterns(this.catFeederConfiguration.getScheduledTask());
+//			catFeederScheduler.schedule(cstf);
 			//end of the config
 			this.applicationState = ApplicationState.RUNNING;
 			logger.info("CatFeederApplication Started");
@@ -74,7 +75,11 @@ public class CatFeederApplication {
 		try {
 			File configFile = new File(getClass().getClassLoader().getResource(configFilePath).getFile());
 			String configRaw = FileUtils.readFileToString(configFile);
-			return gsonBuilder.create().fromJson(configRaw, CatFeederConfiguration.class);
+			CatFeederConfiguration config = gsonBuilder.create().fromJson(configRaw, CatFeederConfiguration.class);
+			if(config == null){
+				throw new CatFeederException("unable to parse config");
+			}
+			return config;
 		} catch (Exception e) {
 			logger.error("Error while loading config file set default config", e);
 		}
@@ -100,17 +105,18 @@ public class CatFeederApplication {
 
 	public void applyNewConfiguration(JsonElement jsonConfig) throws Exception{
 		CatFeederConfiguration newConf = this.gsonBuilder.create().fromJson(jsonConfig, CatFeederConfiguration.class);
-		//set the new Configuration
-		this.catFeederConfiguration = newConf;
-		//clear the scheduler and reset the new schedule
+		if(newConf != null) {
+			//set the new Configuration
+			this.catFeederConfiguration = newConf;
+			//clear the scheduler and reset the new schedule
 //		this.catFeederScheduler.unScheduleAll();
-		//retreive task to schedule
-		//TODO for dev manual building
+			//retreive task to schedule
+			//TODO for dev manual building
 //		CatScheduledFeederTask cstf = new CatScheduledFeederTask()
 //				.setRunnableTask(DummyTask.class)
 //				.setSchedulingPatterns(this.catFeederConfiguration.getScheduledTask());
 //		catFeederScheduler.schedule(cstf);
-
+		}
 	}
 
 	public CatFeederConfiguration saveConfiguration() {

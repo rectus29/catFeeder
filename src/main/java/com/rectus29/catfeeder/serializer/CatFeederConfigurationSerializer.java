@@ -3,6 +3,7 @@ package com.rectus29.catfeeder.serializer;
 
 import com.google.gson.*;
 import com.rectus29.catfeeder.CatFeederConfiguration;
+import com.rectus29.catfeeder.CatFeederScheduleEntry;
 import com.rectus29.catfeeder.utils.SchedulingPattern;
 
 import java.lang.reflect.Type;
@@ -20,7 +21,7 @@ public class CatFeederConfigurationSerializer implements JsonSerializer<CatFeede
 		out.setBuildNumber(jsonObject.get("buildNumber").getAsString());
 		out.setOpeningTime(jsonObject.get("openingTime").getAsInt());
 		out.setVersion(jsonObject.get("version").getAsString());
-		jsonObject.getAsJsonArray("scheduledTask").forEach(jsonElement1 -> out.getScheduledTask().add(jsonDeserializationContext.deserialize(jsonElement1, SchedulingPattern.class)));
+		jsonObject.getAsJsonArray("scheduledTask").forEach(jsonElement1 -> out.getScheduledTask().add(jsonDeserializationContext.deserialize(jsonElement1, CatFeederScheduleEntry.class)));
 		return out;
 	}
 

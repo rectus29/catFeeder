@@ -7,7 +7,15 @@
 	{
 	  "day": 0,
 	  "hour": "12:00",
-	  "uid": "yala"
+	  "uid": "yala",
+	  "quantity":""
+	}
+  ],
+  "users" : [
+	{
+	  "login": "admin",
+	  "password": "admin",
+	  "token":"",
 	}
   ]
 }

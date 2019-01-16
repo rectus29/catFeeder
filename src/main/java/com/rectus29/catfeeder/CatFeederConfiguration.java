@@ -22,7 +22,7 @@ public class CatFeederConfiguration {
 	private String version = "Default-Version";
 	private String buildNumber = "0000";
 	private long openingTime = new Date().getTime();
-	private List<SchedulingPattern> scheduledTask = new ArrayList<>();
+	private List<CatFeederScheduleEntry> feederScheduleEntries = new ArrayList<>();
 
 	public CatFeederConfiguration() {
 	}
@@ -54,12 +54,12 @@ public class CatFeederConfiguration {
 		return this;
 	}
 
-	public List<SchedulingPattern> getScheduledTask() {
-		return scheduledTask;
+	public List<CatFeederScheduleEntry> getScheduledTask() {
+		return feederScheduleEntries;
 	}
 
-	public CatFeederConfiguration setScheduledTask(List<SchedulingPattern> scheduledTask) {
-		this.scheduledTask = scheduledTask;
+	public CatFeederConfiguration setScheduledTask(List<CatFeederScheduleEntry> scheduledTask) {
+		this.feederScheduleEntries = scheduledTask;
 		return this;
 	}
 }
