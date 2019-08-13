@@ -2,18 +2,17 @@ package com.rectus29.catfeeder.task;
 
 import com.pi4j.io.gpio.*;
 import com.rectus29.catfeeder.utils.Mp3Player;
+import com.rectus29.catfeeder.utils.SchedulingPattern;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimerTask;
+import java.util.UUID;
 
 /*-----------------------------------------------------*/
-/*      _____           _               ___   ___      */
-/*     |  __ \         | |             |__ \ / _ \     */
-/*     | |__) |___  ___| |_ _   _ ___     ) | (_) |    */
-/*     |  _  // _ \/ __| __| | | / __|   / / \__, |    */
-/*     | | \ \  __/ (__| |_| |_| \__ \  / /_   / /     */
-/*     |_|  \_\___|\___|\__|\__,_|___/ |____| /_/      */
+/*                     Rectus29                        */
 /*                                                     */
 /*                 All right reserved                  */
 /*-----------------------------------------------------*/
@@ -21,16 +20,9 @@ import java.util.TimerTask;
 public class CatFeedTask extends TimerTask {
 	private static Logger logger = LogManager.getLogger(CatFeedTask.class);
 	private static int MOTORRUNNINGMILLIS = 2000;
-
-	@Override
-	public boolean cancel() {
-		return super.cancel();
-	}
-
-	@Override
-	public long scheduledExecutionTime() {
-		return super.scheduledExecutionTime();
-	}
+	private int quantity = 10;
+	private List<SchedulingPattern> schedulingPatterns = new ArrayList<>();
+	private String uid = UUID.randomUUID().toString();
 
 	@Override
 	public void run() {
@@ -53,5 +45,32 @@ public class CatFeedTask extends TimerTask {
 		} catch (InterruptedException e) {
 			logger.info("distribution error", e);
 		}
+	}
+
+	public List<SchedulingPattern> getSchedulingPatterns() {
+		return schedulingPatterns;
+	}
+
+	public CatFeedTask setSchedulingPatterns(List<SchedulingPattern> schedulingPatterns) {
+		this.schedulingPatterns = schedulingPatterns;
+		return this;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public CatFeedTask setQuantity(int quantity) {
+		this.quantity = quantity;
+		return this;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public CatFeedTask setUid(String uid) {
+		this.uid = uid;
+		return this;
 	}
 }

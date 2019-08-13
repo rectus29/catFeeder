@@ -12,7 +12,7 @@ package com.rectus29.catfeeder;
 /*                 All right reserved                  */
 /*-----------------------------------------------------*/
 
-import com.rectus29.catfeeder.utils.SchedulingPattern;
+import com.rectus29.catfeeder.task.CatFeedTask;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,8 +21,9 @@ import java.util.List;
 public class CatFeederConfiguration {
 	private String version = "Default-Version";
 	private String buildNumber = "0000";
+	private Date updateDate = new Date();
 	private long openingTime = new Date().getTime();
-	private List<CatFeederScheduleEntry> feederScheduleEntries = new ArrayList<>();
+	private List<CatFeedTask> feederScheduleEntries = new ArrayList<>();
 
 	public CatFeederConfiguration() {
 	}
@@ -54,12 +55,23 @@ public class CatFeederConfiguration {
 		return this;
 	}
 
-	public List<CatFeederScheduleEntry> getScheduledTask() {
+	public List<CatFeedTask> getScheduledTask() {
 		return feederScheduleEntries;
 	}
 
-	public CatFeederConfiguration setScheduledTask(List<CatFeederScheduleEntry> scheduledTask) {
+	public CatFeederConfiguration setScheduledTask(List<CatFeedTask> scheduledTask) {
 		this.feederScheduleEntries = scheduledTask;
+		return this;
+	}
+
+
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public CatFeederConfiguration setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
 		return this;
 	}
 }

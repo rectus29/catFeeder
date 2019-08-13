@@ -13,12 +13,15 @@ package com.rectus29.catfeeder.utils;
 /*-----------------------------------------------------*/
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -120,6 +123,14 @@ public class SchedulingPattern {
 				"," + dtf.print(startTime) +
 				"," + dtf.print(endTime);
 
+	}
+
+	public Date getNextExecutionDate(Date date) {
+		DateTime dt = new DateTime(date);
+		dt = dt.withDayOfWeek(this.getDayNumber());
+		dt = dt.withHourOfDay(this.getStartTime().getHourOfDay());
+		dt = dt.withMinuteOfHour(this.getStartTime().getMinuteOfHour());
+		return dt.toDate();
 	}
 }
 

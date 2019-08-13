@@ -3,8 +3,7 @@ package com.rectus29.catfeeder.serializer;
 
 import com.google.gson.*;
 import com.rectus29.catfeeder.CatFeederConfiguration;
-import com.rectus29.catfeeder.CatFeederScheduleEntry;
-import com.rectus29.catfeeder.utils.SchedulingPattern;
+import com.rectus29.catfeeder.task.CatFeedTask;
 
 import java.lang.reflect.Type;
 
@@ -16,12 +15,12 @@ public class CatFeederConfigurationSerializer implements JsonSerializer<CatFeede
 	@Override
 	public CatFeederConfiguration deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 		JsonObject jsonObject = jsonElement.getAsJsonObject();
-
 		CatFeederConfiguration out = new CatFeederConfiguration();
 		out.setBuildNumber(jsonObject.get("buildNumber").getAsString());
 		out.setOpeningTime(jsonObject.get("openingTime").getAsInt());
 		out.setVersion(jsonObject.get("version").getAsString());
-		jsonObject.getAsJsonArray("scheduledTask").forEach(jsonElement1 -> out.getScheduledTask().add(jsonDeserializationContext.deserialize(jsonElement1, CatFeederScheduleEntry.class)));
+		jsonObject.getAsJsonArray("scheduledTask")
+				.forEach(jsonElement1 -> out.getScheduledTask().add(jsonDeserializationContext.deserialize(jsonElement1, CatFeedTask.class)));
 		return out;
 	}
 

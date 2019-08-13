@@ -4,12 +4,10 @@ import com.google.gson.*;
 import com.rectus29.catfeeder.enums.ApplicationState;
 import com.rectus29.catfeeder.exception.CatFeederException;
 import com.rectus29.catfeeder.scheduler.CatFeederScheduler;
+import com.rectus29.catfeeder.serializer.CatFeedTaskSerializer;
 import com.rectus29.catfeeder.serializer.CatFeederConfigurationSerializer;
 import com.rectus29.catfeeder.serializer.SchedulingPatternSerializer;
 import com.rectus29.catfeeder.task.CatFeedTask;
-import com.rectus29.catfeeder.task.CatScheduledFeederTask;
-import com.rectus29.catfeeder.task.DummyTask;
-import com.rectus29.catfeeder.utils.Mp3Player;
 import com.rectus29.catfeeder.utils.SchedulingPattern;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -40,6 +38,7 @@ public class CatFeederApplication {
 	private String configFilePath = "catFeederConfiguration.json";
 	private GsonBuilder gsonBuilder =  new GsonBuilder()
 			.registerTypeAdapter(CatFeederConfiguration.class, new CatFeederConfigurationSerializer())
+			.registerTypeAdapter(CatFeedTask.class, new CatFeedTaskSerializer())
 			.registerTypeAdapter(SchedulingPattern.class, new SchedulingPatternSerializer());
 
 	private CatFeederApplication() {
@@ -59,10 +58,9 @@ public class CatFeederApplication {
 			this.catFeederScheduler = new CatFeederScheduler();
 			//retreive task to schedule
 			//TODO for dev manual building
-//			CatScheduledFeederTask cstf = new CatScheduledFeederTask()
-//					.setRunnableTask(DummyTask.class)
-//					.setSchedulingPatterns(this.catFeederConfiguration.getScheduledTask());
-//			catFeederScheduler.schedule(cstf);
+			for(CatFeedTask temp : catFeederConfiguration.getScheduledTask()){
+				catFeederScheduler.schedule(temp);
+			}
 			//end of the config
 			this.applicationState = ApplicationState.RUNNING;
 			logger.info("CatFeederApplication Started");

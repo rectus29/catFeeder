@@ -5,17 +5,22 @@
   "openingTime": 2000,
   "scheduledTask": [
 	{
-	  "day": 0,
-	  "hour": "12:00",
-	  "uid": "yala",
-	  "quantity":""
+	  "uid" : "plop",
+	  "quantity" : 10,
+	  "schedulingPatterns" : [
+		{
+		  "day": 0,
+		  "hour": "12:00",
+		  "uid": "plop"
+		}
+	  ]
 	}
   ],
   "users" : [
 	{
 	  "login": "admin",
 	  "password": "admin",
-	  "token":"",
+	  "token":"123456789"
 	}
   ]
 }
